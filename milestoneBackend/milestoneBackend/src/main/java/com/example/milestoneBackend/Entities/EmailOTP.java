@@ -15,7 +15,7 @@ public class EmailOTP{
     private String id;
 
     private String email;
-    private int otp;
+    private String otp;
     private LocalDateTime expiryTime;
 
 
@@ -35,11 +35,11 @@ public class EmailOTP{
         this.email = email;
     }
 
-    public int getOtp() {
+    public String getOtp() {
         return otp;
     }
 
-    public void setOtp(int otp) {
+    public void setOtp(String otp) {
         this.otp = otp;
     }
 
