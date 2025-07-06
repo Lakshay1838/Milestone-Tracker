@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.annotation.Id;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -25,15 +26,14 @@ public class MilestoneService {
     public Milestone createNewMilestone(Milestone milestone){
         User user = userService.getUserByEmail();
         List<Milestone> milestoneList = user.getMilestones();
+        milestone.setStartDate(LocalDateTime.now());
+        System.out.println(milestone.getTotalDays());
         Milestone justCreated = milestoneRepository.save(milestone);
         milestoneList.add(justCreated);
         User u = userService.createUser(user);
         return milestoneRepository.findById(milestone.getId()).orElse(null);
     }
-//    get by id
-//    public Milestone getMilestoneById(String id){
-//        return milestoneRepository.findById(new ObjectId(id)).orElse(null);
-//    }
+//    get by id for user
     public Milestone getMilestoneByIdForUser(String id){
 //        User user = userService.getUserByEmail();
         List<Milestone> milestoneList = userService.getUserByEmail().getMilestones();

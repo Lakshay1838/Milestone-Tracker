@@ -12,10 +12,11 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
-    private String email;
+    private final String email = "lakshay@gmail.com";
 
 //    create User
     public User createUser(User u){
+        u.setCreated(LocalDateTime.now());
         return userRepository.save(u);
     }
 //    get by id

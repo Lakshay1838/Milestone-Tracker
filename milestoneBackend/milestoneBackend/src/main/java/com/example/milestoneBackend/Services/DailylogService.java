@@ -6,6 +6,9 @@ import com.example.milestoneBackend.Repositories.DailylogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Service
 public class DailylogService {
 
@@ -16,6 +19,13 @@ public class DailylogService {
 
     public Dailylog createDailyLog(String milestoneId,Dailylog dailylog){
         Milestone milestone = milestoneService.getMilestoneByIdForUser(milestoneId);
+        dailylog.setDate(LocalDate.now());
+//        System.out.println(LocalDate.now());
+        boolean exists = milestoneService.getALlDailyLogsForMilestone(milestoneId).stream()
+                .anyMatch(log -> log.getDate().equals(dailylog.getDate()));
+        if(exists){
+            return null;
+        }
         Dailylog justSaved = dailylogRepository.save(dailylog);
         milestone.getDailyLogs().add(justSaved);
         milestoneService.createNewMilestone(milestone);
