@@ -14,6 +14,10 @@ public class UserService {
     private UserRepository userRepository;
     private String email;
 
+//    create User
+    public User createUser(User u){
+        return userRepository.save(u);
+    }
 //    get by id
 //    get by email
     public User getUserByEmail(){

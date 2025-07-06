@@ -6,6 +6,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface DailylogsRepository extends MongoRepository<Dailylog, ObjectId> {
+public interface DailylogRepository extends MongoRepository<Dailylog, ObjectId> {
 
 }

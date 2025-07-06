@@ -6,6 +6,7 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.IndexOptions;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -25,6 +26,7 @@ public class User {
     @NonNull
     private String password;
 
+    @DBRef
     private List<Milestone> milestones = new ArrayList<>();
     private LocalDateTime created;
 }
