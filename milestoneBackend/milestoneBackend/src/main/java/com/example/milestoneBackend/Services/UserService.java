@@ -2,6 +2,8 @@ package com.example.milestoneBackend.Services;
 
 import com.example.milestoneBackend.Entities.User;
 import com.example.milestoneBackend.Repositories.UserRepository;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,9 +14,12 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
-    private final String email = "lakshay@gmail.com";
+    @Autowired
+    private HttpServletRequest request;
 
-//    create User
+    private final String email = (String) request.getAttribute("email");
+
+    //    create User
     public User createUser(User u){
         u.setCreated(LocalDateTime.now());
         return userRepository.save(u);

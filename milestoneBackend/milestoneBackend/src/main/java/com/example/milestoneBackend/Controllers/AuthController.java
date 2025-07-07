@@ -4,6 +4,7 @@ import com.example.milestoneBackend.Entities.EmailOTP;
 import com.example.milestoneBackend.Entities.User;
 import com.example.milestoneBackend.Repositories.EmailOTPRepository;
 import com.example.milestoneBackend.Repositories.UserRepository;
+import com.example.milestoneBackend.Security.JWTUtil;
 import com.example.milestoneBackend.Services.OTPService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,9 @@ public class AuthController {
     private EmailOTPRepository emailOTPRepository;
     @Autowired
     private OTPService otpService;
+    @Autowired
+    private JWTUtil jwtUtil;
+
 
     @PostMapping("/signup")
     public ResponseEntity<?>    signup(@RequestBody User user){
@@ -55,5 +59,22 @@ public class AuthController {
         emailOTPRepository.delete(storedotp);
 
         return ResponseEntity.ok("Email verified successfully");
+    }
+
+
+    @PostMapping("login")
+    public ResponseEntity<?> login(@RequestParam String email,@RequestParam String password){
+        User user = userRepository.getByEmail(email);
+
+        if(user == null || !user.getPassword().equals(password)){
+            return ResponseEntity.status(401).body("Invalid email or usrename");
+        }
+
+        if(!user.isVerified()){
+            return ResponseEntity.status(403).body("Verify you email frist then proceed");
+        }
+
+        String token = jwtUtil.generateToken(email);
+        return ResponseEntity.ok("Bearer " + token);
     }
 }

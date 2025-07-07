@@ -24,7 +24,7 @@ public class MilestoneService {
 
 //    create by id
     public Milestone createNewMilestone(Milestone milestone){
-        User user = userService.getUserByEmail();
+        User user = userService.getUserByEmail(email);
         List<Milestone> milestoneList = user.getMilestones();
         milestone.setStartDate(LocalDateTime.now());
         System.out.println(milestone.getTotalDays());
@@ -36,7 +36,7 @@ public class MilestoneService {
 //    get by id for user
     public Milestone getMilestoneByIdForUser(String id){
 //        User user = userService.getUserByEmail();
-        List<Milestone> milestoneList = userService.getUserByEmail().getMilestones();
+        List<Milestone> milestoneList = userService.getUserByEmail(email).getMilestones();
         for(Milestone milestone:milestoneList){
             if(milestone.getId().equals(new ObjectId(id))){
                 return milestone;
@@ -46,7 +46,7 @@ public class MilestoneService {
     }
 //    update by id - can only update name and the days assigned once only.
     public Milestone updateById(String id,Milestone updatedMilestone,boolean arr[]){
-        List<Milestone> milestoneList = userService.getUserByEmail().getMilestones();
+        List<Milestone> milestoneList = userService.getUserByEmail(email).getMilestones();
         Milestone milestoneToUpdate = null;
 
         for(Milestone milestone:milestoneList){
@@ -71,7 +71,7 @@ public class MilestoneService {
     }
 //    delete by id
     public boolean deleteById(String id){
-        User user = userService.getUserByEmail();
+        User user = userService.getUserByEmail(email);
         List<Milestone> milestoneList = user.getMilestones();
 
         for(Milestone milestone:milestoneList){
