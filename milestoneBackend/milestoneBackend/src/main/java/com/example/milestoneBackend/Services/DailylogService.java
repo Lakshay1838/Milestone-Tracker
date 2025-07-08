@@ -3,6 +3,7 @@ package com.example.milestoneBackend.Services;
 import com.example.milestoneBackend.Entities.Dailylog;
 import com.example.milestoneBackend.Entities.Milestone;
 import com.example.milestoneBackend.Repositories.DailylogRepository;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +29,13 @@ public class DailylogService {
         }
         Dailylog justSaved = dailylogRepository.save(dailylog);
         milestone.getDailyLogs().add(justSaved);
-        milestoneService.createNewMilestone(milestone);
+//        milestoneService.createNewMilestone(milestone);
+        boolean[] arr = new boolean[1];
+        arr[0] = false;
+        milestoneService.updateById(milestoneId,milestone,arr);
         return dailylogRepository.findById(justSaved.getId()).orElse(null);
+    }
+    public void deleteDailyLog(ObjectId id){
+        dailylogRepository.deleteById(id);
     }
 }

@@ -17,7 +17,9 @@ public class UserService {
     @Autowired
     private HttpServletRequest request;
 
-    private final String email = (String) request.getAttribute("email");
+    public String getLoggedInEmail(){
+        return (String) request.getAttribute("email");
+    }
 
     //    create User
     public User createUser(User u){
@@ -27,11 +29,11 @@ public class UserService {
 //    get by id
 //    get by email
     public User getUserByEmail(){
-        return userRepository.getByEmail(email);
+        return userRepository.getByEmail(getLoggedInEmail());
     }
 //    update user by email
     public User updateUserByEmail(User user){
-        User u = userRepository.getByEmail(email);
+        User u = userRepository.getByEmail(getLoggedInEmail());
         if(u != null){
             if(user.getUsername() != null){
                 u.setUsername(user.getUsername());
@@ -49,9 +51,9 @@ public class UserService {
     }
 //    delete user by email
     public boolean deleteByEmail(){
-        User u = userRepository.getByEmail(email);
+        User u = userRepository.getByEmail(getLoggedInEmail());
         if(u != null){
-            userRepository.deleteByEmail(email);
+            userRepository.deleteByEmail(getLoggedInEmail());
             return true;
         }else {
             return false;

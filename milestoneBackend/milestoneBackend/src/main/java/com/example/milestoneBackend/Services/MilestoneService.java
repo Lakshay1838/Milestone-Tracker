@@ -6,10 +6,12 @@ import com.example.milestoneBackend.Entities.User;
 import com.example.milestoneBackend.Repositories.MilestoneRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.annotation.Id;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -19,12 +21,13 @@ public class MilestoneService {
     private MilestoneRepository milestoneRepository;
     @Autowired
     private UserService userService;
-
-    private String email;
+    @Autowired
+    @Lazy
+    private DailylogService dailylogService;
 
 //    create by id
     public Milestone createNewMilestone(Milestone milestone){
-        User user = userService.getUserByEmail(email);
+        User user = userService.getUserByEmail();
         List<Milestone> milestoneList = user.getMilestones();
         milestone.setStartDate(LocalDateTime.now());
         System.out.println(milestone.getTotalDays());
@@ -36,7 +39,7 @@ public class MilestoneService {
 //    get by id for user
     public Milestone getMilestoneByIdForUser(String id){
 //        User user = userService.getUserByEmail();
-        List<Milestone> milestoneList = userService.getUserByEmail(email).getMilestones();
+        List<Milestone> milestoneList = userService.getUserByEmail().getMilestones();
         for(Milestone milestone:milestoneList){
             if(milestone.getId().equals(new ObjectId(id))){
                 return milestone;
@@ -46,7 +49,7 @@ public class MilestoneService {
     }
 //    update by id - can only update name and the days assigned once only.
     public Milestone updateById(String id,Milestone updatedMilestone,boolean arr[]){
-        List<Milestone> milestoneList = userService.getUserByEmail(email).getMilestones();
+        List<Milestone> milestoneList = userService.getUserByEmail().getMilestones();
         Milestone milestoneToUpdate = null;
 
         for(Milestone milestone:milestoneList){
@@ -65,19 +68,27 @@ public class MilestoneService {
                 milestoneToUpdate.setUpdatedOnce(true);
                 milestoneToUpdate.setTotalDays(updatedMilestone.getTotalDays());
             }
+            milestoneToUpdate.setDailyLogs(updatedMilestone.getDailyLogs());
             return milestoneRepository.save(milestoneToUpdate);
         }
         return milestoneToUpdate;
     }
 //    delete by id
     public boolean deleteById(String id){
-        User user = userService.getUserByEmail(email);
+        User user = userService.getUserByEmail();
         List<Milestone> milestoneList = user.getMilestones();
 
         for(Milestone milestone:milestoneList){
             if(milestone.getId().equals(new ObjectId(id))){
                 milestoneList.remove(milestone);
-                user = userService.createUser(user);
+                user.setMilestones(milestoneList);
+                User updated = userService.createUser(user);
+
+                List<Dailylog> dailylogs = milestone.getDailyLogs();
+                for(Dailylog dailylog:dailylogs){
+                    dailylogService.deleteDailyLog(dailylog.getId());
+                }
+
                 milestoneRepository.deleteById(new ObjectId(id));
                 return true;
             }
