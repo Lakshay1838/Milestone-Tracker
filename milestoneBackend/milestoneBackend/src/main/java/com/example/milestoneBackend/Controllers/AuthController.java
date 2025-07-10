@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/auth")
+@CrossOrigin(origins = "https://localhost:5173")
 public class AuthController {
 
     @Autowired
